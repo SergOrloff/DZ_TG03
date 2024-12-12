@@ -1,17 +1,27 @@
 import asyncio
+import os
 import logging
 import aiosqlite
 from aiogram import Bot, Dispatcher, types, Router, F
+from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import StateFilter
 from aiogram.fsm.state import StatesGroup, State
+from dotenv import load_dotenv
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import (
     Message, ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton,
     InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 )
 from aiogram.filters import Command
-from config import TOKEN  # Импортируем токен бота из файла конфигурации
+# from config import TOKEN  # Импортируем токен бота из файла конфигурации
+
+
+# Загружаем переменные окружения из файла .env
+load_dotenv()
+
+# Получаем значения из .env файла
+API_TOKEN = os.getenv('TELEGRAM_TOKEN')
 
 # Настраиваем логирование для вывода информации в консоль
 # logging.basicConfig(level=logging.INFO)
@@ -28,8 +38,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 logger.info("Бот запущен.")
-# Инициализируем бота с заданным токеном
-bot = Bot(token=TOKEN)
+# Инициализируем бота с заданным токеном и диспетчера
+session = AiohttpSession()
+bot = Bot(token=API_TOKEN, session=session)
 # Создаем роутер
 router = Router()
 
